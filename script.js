@@ -55,6 +55,23 @@ function collide(grid, player) {
   return false;
 }
 
+function merge(grid, player) {
+  const PIEZA = player.pieza;
+  const POSICION = player.pos;
+  // el 1er forEach recorre horizontalmeente las filas y devuelve la posicion en y
+  // el 2do forEach recorre verticalmente la fila que devuelve el 1er forEach y devuelve la posicion x 
+  PIEZA.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value !== 0) {
+        grid[y + POSICION.y][x + POSICION.x] = value;
+        console.log(value)
+      }
+    }
+    )
+  }
+  )
+}
+
 // La funcion drawPieza dibujara la pieza del tetromino dependiendo de los parametros que le llegue como la pieza especifica y su posicion
 function drawPieza(pieza, posicion) {
   // Se realizan el forEach anidado para recorrer cada indice verticalmente y horizontalmente
