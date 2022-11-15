@@ -30,3 +30,10 @@ function createMatriz(width, height) {
 
   return MATRIZ; // Devuelve la matriz ya construida 
 }
+
+// La funcion draw pintara el canvas
+function draw() {
+  // Dibuja el canvas con el color y las medidas especificadas
+  PINCEL.fillStyle = '#b9b9b9';
+  PINCEL.fillRect(0, 0, CANVAS.width, CANVAS.height); // (x,y, ancho, alto)
+ 
