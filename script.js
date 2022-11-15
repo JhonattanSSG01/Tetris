@@ -20,6 +20,7 @@ const COLORS = [ // Array donde se alamcenaran los colores diferentes para cada 
 ]
 const PLAYER = {
   pos: { x: 0, y: 0 }, // Posiciones
+  score: 0, // Puntaje
   pieza: null
 }
 
@@ -147,6 +148,22 @@ function draw() {
   drawPieza(PLAYER.pieza, PLAYER.pos); // La llamada a la funcion #2 Dibuja la pieza actual de la constante player
 }
 
+function gridDelete(){
+  let count = 1;
+  outer : for(let y = GRID.length - 1; y > 0; y--){
+    for(x = 0; x < GRID.length; x++){
+      if(GRID[y][x] === 0){
+      continue outer;
+      }
+    }
+    const ROW = GRID.splice(y,1)[0].fill(0);
+    GRID.unshift(ROW);
+    y++;
+
+    PLAYER.score += (count * 10);
+  }
+}
+
 // La funcion update nos ira actualizando el tiempo que le llegue como parametro - el tiempo anterior, se redibujara el canvas cada vez que se llame esta funcion
 function update(time = 0) {
   const DELTA_TIME = (time - lastTime);
@@ -171,6 +188,8 @@ function drop() {
     PLAYER.pos.y--; // Se resta 1 a la posicion eje y de la ficha cada vez que encuentre una colision para que no continue bajando y quede statica en la possicion que llegue.
     merge(GRID, PLAYER);
     reset(); // Se llama la funcion reset cada vez que una ficha encuentra una colision, lo cual, aparece una nuevamente
+    gridDelete();
+    updateScore();
   }
   dropCounter = 0; // Se inicializa nuevamente el contador para que haga el efecto de caer lentamente
 }
@@ -223,6 +242,10 @@ function reset() {
   PLAYER.pos.y = 0; // Se reinicia posision en y
 }
 
+function updateScore(){
+  document.getElementById('score').innerHTML = PLAYER.score;
+}
+
 // El evento nos ayudara a captar el sonido de las teclas especificas a la hora de mover el tetramino
 document.addEventListener('keydown', (event) => {
   // Condicion anidada si escucha las techas ⬇️➡️⬅️ o las teclas s-w-a-d
@@ -238,5 +261,5 @@ document.addEventListener('keydown', (event) => {
 })
 
 reset();
-
+updateScore();
 update();
