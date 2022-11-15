@@ -63,3 +63,14 @@ function draw() {
   drawPieza(PLAYER.pieza, PLAYER.pos); // La llamada a la funcion #2 Dibuja la pieza actual de la constante player
 }
 
+// La funcion update nos ira actualizando el tiempo que le llegue como parametro - el tiempo anterior, se redibujara el canvas cada vez que se llame esta funcion
+function update(time = 0) {
+  const DELTA_TIME = (time - lastTime);
+  lastTime = time;
+  dropCounter += DELTA_TIME; // Se le asigna al contador el tiempo que resulte cada vez que se resta el tiempo actual con el anterior en cada llamada de la animacion sobre la funcion
+
+  draw(); // Llamar funcion draw para redibujar
+  requestAnimationFrame(update); // Se ira llamando cada vez que se llama la fuction update con el parametro time
+  /* Informa al navegador que quieres realizar una animación y solicita que el navegador programe el repintado de la ventana para
+  el próximo ciclo de animación. El método acepta como argumento una función a la que llamar antes de efectuar el repintado.*/
+}
