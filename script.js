@@ -54,7 +54,7 @@ function createTetra(tipo){
       [1, 1, 0],
       [0, 0, 0],
     ];
-  } else if (tipo === 'z') { // Tetromino z
+  } else if (tipo === 'Z') { // Tetromino z
     return [
       [1, 1, 0],
       [0, 1, 1],
@@ -204,8 +204,8 @@ function rotate(pieza) {
 
 // La funcion reset nos ayudara a resetear las pociones de cada nueva ficha que se genere y no se sobrepponga en la que ya este
 function reset() {
-  const TETRAMINOS = 'TOLJSZ';
-  PLAYER.pieza = createTetra(TETRAMINOS[TETRAMINOS.length * Math.random()]); // Se agrega la funcion de la nueva ficha cada vez que se reseteen las pocisiones
+  const TETRAMINOS = 'TOLJISZ'; // Se declara la constante e inicializa con una cadena de texto que tendra las letras los cuales son los tetraminos 
+  PLAYER.pieza = createTetra(TETRAMINOS[Math.floor(TETRAMINOS.length * Math.random())]); // Se le asigna a la ficha la funcion createTetra la cual como argumento se le da la posicion aleatoriamente de la cadena de texto que se guarda en la constante TERAMINOS
   PLAYER.pos.x = 0; // Se reinicia posision en x
   PLAYER.pos.y = 0; // Se reinicia posision en y
 }
