@@ -5,12 +5,25 @@ let dropCounter = 0; // Se decalra e inicializa en cero el contador de cada caid
 const CANVAS = document.querySelector('canvas'); // Se declara constante para llamar la etiqueta canvas
 const PINCEL = CANVAS.getContext('2d'); // Se declara constante para contextualizar que formato de dibujo manejaremos
 const GRID = createMatriz(10, 20); // Se decalara constante para la creacion de la matriz.
+let colorRandom = Math.floor(Math.random() * 255); // Obtener un numero aleatorio
+let colorRandom1 = Math.floor(Math.random() * 150);
+let colorRandom2 = Math.floor(Math.random() * 50);
+const COLORS = [ // Array donde se alamcenaran los colores diferentes para cada Tritomino
+  null, // El 0 no lleva color, ya que, no se debe pintar para que se visualize la ficha correctamente
+  `rgb(${colorRandom},${colorRandom1},${colorRandom2})`,
+  `rgb(${colorRandom1},${colorRandom1},${colorRandom2})`,
+  `rgb(${colorRandom2},${colorRandom1},${colorRandom2})`,
+  `rgb(${colorRandom1},${colorRandom},${colorRandom2})`,
+  `rgb(${colorRandom},${colorRandom1},${colorRandom})`,
+  `rgb(${colorRandom2},${colorRandom1},${colorRandom})`,
+  `rgb(${colorRandom2},${colorRandom},${colorRandom2})`
+]
 const PLAYER = {
   pos: { x: 0, y: 0 }, // Posiciones
   pieza: null
 }
 
-PINCEL.scale(20, 20);
+PINCEL.scale(45, 45);
 // 200 / 20 = 10
 // 400 / 20 = 20
 // 10 columnas y 20 filas
@@ -26,38 +39,38 @@ function createTetra(tipo){
     ]; 
   } else if(tipo === 'O'){ // Tetromino O
     return [ 
-      [1, 1],
-      [1, 1],
+      [2, 2],
+      [2, 2],
     ]; 
   } else if (tipo === 'L') { // Tetromino L
     return [
-      [0, 1, 0],
-      [0, 1, 0],
-      [0, 1, 1],
+      [0, 3, 0],
+      [0, 3, 0],
+      [0, 3, 3],
     ];
   } else if (tipo === 'J') { // Tetromino J
     return [
-      [0, 1, 0],
-      [0, 1, 0],
-      [1, 1, 0],
+      [0, 4, 0],
+      [0, 4, 0],
+      [4, 4, 0],
     ];
   } else if (tipo === 'I') { // Tetromino I
     return [
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
+      [0, 5, 0, 0],
+      [0, 5, 0, 0],
+      [0, 5, 0, 0],
+      [0, 5, 0, 0],
     ];
   } else if (tipo === 'S') { // Tetromino S
     return [
-      [0, 1, 1],
-      [1, 1, 0],
+      [0, 6, 6],
+      [6, 6, 0],
       [0, 0, 0],
     ];
   } else if (tipo === 'Z') { // Tetromino z
     return [
-      [1, 1, 0],
-      [0, 1, 1],
+      [7, 7, 0],
+      [0, 7, 7],
       [0, 0, 0],
     ];
   }
@@ -118,7 +131,7 @@ function drawPieza(pieza, posicion) {
     row.forEach((value, x) => {
       // La considional valida si el valor llega diferente a 0 dibujara el tetramino
       if (value !== 0) {
-        PINCEL.fillStyle = 'rgba(0, 0, 0, .5)'; // Color al tetramino
+        PINCEL.fillStyle = COLORS[value]; // Color del tetramino
         PINCEL.fillRect(x + posicion.x, y + posicion.y, .8, .8); // Pocicion del rectangulo que se dibujara dependiendo de las pocisones en x - y, y se pone el tamaoño que tendra
       }
     })
@@ -178,12 +191,12 @@ function piezaRotate() {
   rotate(PLAYER.pieza); // Se llama la funcion y como argumento le pasamos la ficha actual
   // La condicional validara que mientras haya una collision a la hora de rotar, se logre rotar nuevamente sin salirse del canvas
   while (collide(GRID, PLAYER)) {
-    POSICION += value; // Se le suma a la posicion el valor de la variable value
+    PLAYER.pos.x += value; // Se le suma a la posicion el valor de la variable value
     value = -(value + (value > 0 ? 1 : -1)); // Se valida si la operacion es mayor a 0 que devuelve 1 para volver a la izquierda o -1 para volver a la derecha
     // La condicion valida si value es mayor a la pocion 0 del tetramino lo cual se saldria del canva si no se controla
     if (value > PLAYER.pieza[0].length) {
       rotate(PLAYER.pieza); // Se llama la funcion y como argumento le pasamos la ficha actual para que rote nuevamente
-      POSICION = pos; // Se le asigna a la posicion x la posicion que se ha guardado
+      PLAYER.pos.x = POSICION; // Se le asigna a la posicion x la posicion que se ha guardado
       return;
     }
   }
@@ -205,8 +218,8 @@ function rotate(pieza) {
 // La funcion reset nos ayudara a resetear las pociones de cada nueva ficha que se genere y no se sobrepponga en la que ya este
 function reset() {
   const TETRAMINOS = 'TOLJISZ'; // Se declara la constante e inicializa con una cadena de texto que tendra las letras los cuales son los tetraminos 
-  PLAYER.pieza = createTetra(TETRAMINOS[Math.floor(TETRAMINOS.length * Math.random())]); // Se le asigna a la ficha la funcion createTetra la cual como argumento se le da la posicion aleatoriamente de la cadena de texto que se guarda en la constante TERAMINOS
-  PLAYER.pos.x = 0; // Se reinicia posision en x
+  PLAYER.pieza = createTetra(TETRAMINOS[Math.floor(Math.random() * TETRAMINOS.length)]); // Se le asigna a la ficha la funcion createTetra la cual como argumento se le da la posicion aleatoriamente de la cadena de texto que se guarda en la constante TERAMINOS
+  PLAYER.pos.x = (Math.floor(GRID[0].length / 3)); // Se reinicia posision en x centradamente
   PLAYER.pos.y = 0; // Se reinicia posision en y
 }
 
