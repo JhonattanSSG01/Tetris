@@ -7,17 +7,26 @@ const PINCEL = CANVAS.getContext('2d'); // Se declara constante para contextuali
 const GRID = createMatriz(10, 20); // Se decalara constante para la creacion de la matriz.
 const PLAYER = {
   pos: { x: 0, y: 0 }, // Posiciones
-  pieza: [ // Array bidimensional 
-    [0, 0, 0],
-    [1, 1, 1],
-    [0, 1, 0],
-  ]
+  pieza: null
 }
 
 PINCEL.scale(20, 20);
 // 200 / 20 = 10
 // 400 / 20 = 20
 // 10 columnas y 20 filas
+
+// La funcion createTetra nos ayudara a ir creando una pieza diferente cada vez que se genere una nueva
+function createTetra(tipo){
+  // La condicional lo que validara es la forma de la ficha que vaya llegando como parametro de la funcion
+  if(tipo === 'T'){
+    return [ // Devuelve la matriz // Array bidimensional 
+      [0, 0, 0],
+      [1, 1, 1],
+      [0, 1, 0],
+    ]; 
+  }
+}
+
 
 // La funcion createMatriz creara la matriz con el ancho y alto que llegue como parametro
 function createMatriz(width, height) {
@@ -159,6 +168,7 @@ function rotate(pieza) {
 
 // La funcion reset nos ayudara a resetear las pociones de cada nueva ficha que se genere y no se sobrepponga en la que ya este
 function reset() {
+  PLAYER.pieza = createTetra('T'); // Se agrega la funcion de la nueva ficha cada vez que se reseteen las pocisiones
   PLAYER.pos.x = 0; // Se reinicia posision en x
   PLAYER.pos.y = 0; // Se reinicia posision en y
 }
@@ -176,5 +186,7 @@ document.addEventListener('keydown', (event) => {
     piezaRotate();
   }
 })
+
+reset();
 
 update();
