@@ -77,6 +77,15 @@ function drop() {
   dropCounter = 0; // Se inicializa nuevamente el contador para que haga el efecto de caer lentamente
 }
 
+// La funcion dropMove realiza la sentencia que controla las colisiones de los bordes laterales para que esta no se sobreponga con las fichas y no se pase de los lados de la cuadricula
+function dropMove(direction) {
+  PLAYER.pos.x += direction; // Aumenta cada vez que se mueva lateralmente dependiendo del parametro que reciba la funcion dropMove
+  // La condicional valida si encuentra la ficha una colision lateralmente, lo cual, esa direccion se reiniciaria
+  if (collide(GRID, PLAYER)) {
+    PLAYER.pos.x -= direction; // Se inicializa la posicion al valor original o inicialmente.
+  }
+}
+
 // La funcion update nos ira actualizando el tiempo que le llegue como parametro - el tiempo anterior, se redibujara el canvas cada vez que se llame esta funcion
 function update(time = 0) {
   const DELTA_TIME = (time - lastTime);
