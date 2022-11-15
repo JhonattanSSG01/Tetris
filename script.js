@@ -9,6 +9,14 @@
 const CANVAS = document.querySelector('canvas'); // Se declara constante para llamar la etiqueta canvas
 const PINCEL = CANVAS.getContext('2d'); // Se declara constante para contextualizar que formato de dibujo manejaremos
 const GRID = createMatriz(10,20); // Se decalara constante para la creacion de la matriz.
+const PLAYER = {
+  pos: { x: 0, y: 0 }, // Posiciones
+  pieza: [ // Array bidimensional 
+    [0, 0, 0],
+    [1, 1, 1],
+    [0, 1, 0],
+  ]
+}
 
 PINCEL.scale(20,20);
 // 200 / 20 = 10
@@ -31,9 +39,27 @@ function createMatriz(width, height) {
   return MATRIZ; // Devuelve la matriz ya construida 
 }
 
+// La funcion drawPieza dibujara la pieza del tetromino dependiendo de los parametros que le llegue como la pieza especifica y su posicion
+function drawPieza(pieza, posicion) {
+  // Se realizan el forEach anidado para recorrer cada indice verticalmente y horizontalmente
+  pieza.forEach((row, y) => {
+    row.forEach((value, x) => {
+      // La considional valida si el valor llega diferente a 0 dibujara el tetramino
+      if (value !== 0) {
+        PINCEL.fillStyle = 'rgba(0, 0, 0, .5)'; // Color al tetramino
+        PINCEL.fillRect(x + posicion.x, y + posicion.y, .8, .8); // Pocicion del rectangulo que se dibujara dependiendo de las pocisones en x - y, y se pone el tamaoño que tendra
+      }
+    })
+  });
+}
+
+
 // La funcion draw pintara el canvas
 function draw() {
   // Dibuja el canvas con el color y las medidas especificadas
   PINCEL.fillStyle = '#b9b9b9';
   PINCEL.fillRect(0, 0, CANVAS.width, CANVAS.height); // (x,y, ancho, alto)
- 
+  drawPieza(GRID, { x: 0, y: 0 }); // La llamada a la funcion #1 Redibuja la cuadricula todos los espaciones con posicion x = 0 / y = 0
+  drawPieza(PLAYER.pieza, PLAYER.pos); // La llamada a la funcion #2 Dibuja la pieza actual de la constante player
+}
+
