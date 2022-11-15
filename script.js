@@ -82,12 +82,12 @@ function update(time = 0) {
 document.addEventListener('keydown', (event) => {
   // Condicion anidada si escucha las techas ⬇️➡️⬅️ o las teclas s-w-a-d
   if (event.key === 'ArrowDown' || event.key === 's') {
-    drop(); // La pieza cae en el eje y
+    PLAYER.pieza.y++; // La pieza cae en el eje y
   } else if (event.key === 'ArrowLeft' || event.key === 'a') {
-    dropMove(-1); // La pieza se mueve hacia la izquierda en el eje x
+    PLAYER.pieza.x--; // La pieza se mueve hacia la izquierda en el eje x
   } else if (event.key === 'ArrowRight' || event.key === 'd') {
-    dropMove(1); // La pieza se mueve hacia la derecha en el eje y
-  } 
+    PLAYER.pieza.x++; // La pieza se mueve hacia la derecha en el eje y
+  }
 })
 
 update();
