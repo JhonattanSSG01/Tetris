@@ -91,19 +91,3 @@ document.addEventListener('keydown', (event) => {
 })
 
 update();
-
-// El evento nos ayudara a captar el sonido de las teclas especificas a la hora de mover el tetramino
-document.addEventListener('keydown', (event) => {
-  // Condicion anidada si escucha las techas ⬇️➡️⬅️ o las teclas s-w-a-d
-  if (event.key === 'ArrowDown' || event.key === 's') {
-    drop(); // La pieza cae en el eje y
-  } else if (event.key === 'ArrowLeft' || event.key === 'a') {
-    dropMove(-1); // La pieza se mueve hacia la izquierda en el eje x
-  } else if (event.key === 'ArrowRight' || event.key === 'd') {
-    dropMove(1); // La pieza se mueve hacia la derecha en el eje y
-  } else if (event.key === 'ArrowUp' || event.key === 'w') {
-    piezaRotate();
-  }
-})
-
-update();
