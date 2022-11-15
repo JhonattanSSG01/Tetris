@@ -18,12 +18,48 @@ PINCEL.scale(20, 20);
 // La funcion createTetra nos ayudara a ir creando una pieza diferente cada vez que se genere una nueva
 function createTetra(tipo){
   // La condicional lo que validara es la forma de la ficha que vaya llegando como parametro de la funcion
-  if(tipo === 'T'){
+  if(tipo === 'T'){ // Tetromino T
     return [ // Devuelve la matriz // Array bidimensional 
       [0, 0, 0],
       [1, 1, 1],
       [0, 1, 0],
     ]; 
+  } else if(tipo === 'O'){ // Tetromino O
+    return [ 
+      [1, 1],
+      [1, 1],
+    ]; 
+  } else if (tipo === 'L') { // Tetromino L
+    return [
+      [0, 1, 0],
+      [0, 1, 0],
+      [0, 1, 1],
+    ];
+  } else if (tipo === 'J') { // Tetromino J
+    return [
+      [0, 1, 0],
+      [0, 1, 0],
+      [1, 1, 0],
+    ];
+  } else if (tipo === 'I') { // Tetromino I
+    return [
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+    ];
+  } else if (tipo === 'S') { // Tetromino S
+    return [
+      [0, 1, 1],
+      [1, 1, 0],
+      [0, 0, 0],
+    ];
+  } else if (tipo === 'z') { // Tetromino z
+    return [
+      [1, 1, 0],
+      [0, 1, 1],
+      [0, 0, 0],
+    ];
   }
 }
 
@@ -168,7 +204,8 @@ function rotate(pieza) {
 
 // La funcion reset nos ayudara a resetear las pociones de cada nueva ficha que se genere y no se sobrepponga en la que ya este
 function reset() {
-  PLAYER.pieza = createTetra('T'); // Se agrega la funcion de la nueva ficha cada vez que se reseteen las pocisiones
+  const TETRAMINOS = 'TOLJSZ';
+  PLAYER.pieza = createTetra(TETRAMINOS[TETRAMINOS.length * Math.random()]); // Se agrega la funcion de la nueva ficha cada vez que se reseteen las pocisiones
   PLAYER.pos.x = 0; // Se reinicia posision en x
   PLAYER.pos.y = 0; // Se reinicia posision en y
 }
