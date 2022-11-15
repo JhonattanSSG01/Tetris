@@ -1,14 +1,10 @@
-
-// Utils es una clase
-// loadSound es un metodo de JS para cargar/iniciar sonidos dependiendo la ruta
-// setInterval metodo de js que llama repetidamente una funcion o ejecuta una fragmento del codigo con un tiempo de retraso estimado.
-// bind()
-// mainLoop
-
+let = lastTime = 0;
+let dropInterval = 1000; // Se declara e inicializa el intervalo de tiempo
+let dropCounter = 0; // Se decalra e inicializa en cero el contador de cada caida de la pieza
 
 const CANVAS = document.querySelector('canvas'); // Se declara constante para llamar la etiqueta canvas
 const PINCEL = CANVAS.getContext('2d'); // Se declara constante para contextualizar que formato de dibujo manejaremos
-const GRID = createMatriz(10,20); // Se decalara constante para la creacion de la matriz.
+const GRID = createMatriz(10, 20); // Se decalara constante para la creacion de la matriz.
 const PLAYER = {
   pos: { x: 0, y: 0 }, // Posiciones
   pieza: [ // Array bidimensional 
@@ -18,7 +14,7 @@ const PLAYER = {
   ]
 }
 
-PINCEL.scale(20,20);
+PINCEL.scale(20, 20);
 // 200 / 20 = 10
 // 400 / 20 = 20
 // 10 columnas y 20 filas
@@ -39,6 +35,7 @@ function createMatriz(width, height) {
   return MATRIZ; // Devuelve la matriz ya construida 
 }
 
+
 // La function collide 
 function collide(grid, player) {
   const PIEZA = player.pieza;
@@ -54,6 +51,7 @@ function collide(grid, player) {
 
   return false;
 }
+
 
 function merge(grid, player) {
   const PIEZA = player.pieza;
@@ -86,7 +84,6 @@ function drawPieza(pieza, posicion) {
   });
 }
 
-
 // La funcion draw pintara el canvas
 function draw() {
   // Dibuja el canvas con el color y las medidas especificadas
@@ -96,6 +93,20 @@ function draw() {
   drawPieza(PLAYER.pieza, PLAYER.pos); // La llamada a la funcion #2 Dibuja la pieza actual de la constante player
 }
 
+// La funcion update nos ira actualizando el tiempo que le llegue como parametro - el tiempo anterior, se redibujara el canvas cada vez que se llame esta funcion
+function update(time = 0) {
+  const DELTA_TIME = (time - lastTime);
+  lastTime = time;
+  dropCounter += DELTA_TIME; // Se le asigna al contador el tiempo que resulte cada vez que se resta el tiempo actual con el anterior en cada llamada de la animacion sobre la funcion
+  // la condicion valida si el conteo es mayor al intervalo asignado al principio para realizar la sentencia y vaya cayendo la pieza 
+  if (dropCounter > dropInterval) {
+    drop();
+  }
+  draw(); // Llamar funcion draw para redibujar
+  requestAnimationFrame(update); // Se ira llamando cada vez que se llama la fuction update con el parametro time
+  /* Informa al navegador que quieres realizar una animación y solicita que el navegador programe el repintado de la ventana para
+  el próximo ciclo de animación. El método acepta como argumento una función a la que llamar antes de efectuar el repintado.*/
+}
 
 // La funcion drop realiza la sentencia que controla la caida de cada ficha cada vez que colisione con el borde inferior de la cuadricula u otra ficha para que no se sobreponga.
 function drop() {
@@ -119,19 +130,34 @@ function dropMove(direction) {
   }
 }
 
-// La funcion update nos ira actualizando el tiempo que le llegue como parametro - el tiempo anterior, se redibujara el canvas cada vez que se llame esta funcion
-function update(time = 0) {
-  const DELTA_TIME = (time - lastTime);
-  lastTime = time;
-  dropCounter += DELTA_TIME; // Se le asigna al contador el tiempo que resulte cada vez que se resta el tiempo actual con el anterior en cada llamada de la animacion sobre la funcion
-  // la condicion valida si el conteo es mayor al intervalo asignado al principio para realizar la sentencia y vaya cayendo la pieza 
-  if (dropCounter > dropInterval) {
-    drop();
+function piezaRotate() {
+  const posicion = PLAYER.pos.x;
+  let off = 1;
+  rotate(PLAYER.pieza);
+  while (collide(GRID, PLAYER)) {
+    PLAYER.pos.x += off;
+    off = -(off + (off > 0 ? 1 : -1));
+    if (off > PLAYER.pieza[0].length) {
+      rotate(PLAYER.pieza);
+      PLAYER.pos.x = pos;
+      return;
+    }
   }
-  draw(); // Llamar funcion draw para redibujar
-  requestAnimationFrame(update); // Se ira llamando cada vez que se llama la fuction update con el parametro time
-  /* Informa al navegador que quieres realizar una animación y solicita que el navegador programe el repintado de la ventana para
-  el próximo ciclo de animación. El método acepta como argumento una función a la que llamar antes de efectuar el repintado.*/
+}
+
+function rotate(pieza) {
+  for (let y = 0; y < pieza.length; y++) {
+    for (let x = 0; x < y; x++) {
+      [pieza[x][y], pieza[y][x]] = [pieza[y][x], pieza[x][y]];
+    }
+  }
+
+  pieza.forEach((row) => row.reverse());
+}
+
+function reset() {
+  PLAYER.pos.x = 0;
+  PLAYER.pos.y = 0;
 }
 
 // El evento nos ayudara a captar el sonido de las teclas especificas a la hora de mover el tetramino
@@ -143,6 +169,8 @@ document.addEventListener('keydown', (event) => {
     dropMove(-1); // La pieza se mueve hacia la izquierda en el eje x
   } else if (event.key === 'ArrowRight' || event.key === 'd') {
     dropMove(1); // La pieza se mueve hacia la derecha en el eje y
+  } else if (event.key === 'ArrowUp' || event.key === 'w') {
+    piezaRotate();
   }
 })
 
