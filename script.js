@@ -31,12 +31,11 @@ function createMatriz(width, height) {
   }
 
   // console.table(MATRIZ); Se visualiza en la consola en formato tabla
-
   return MATRIZ; // Devuelve la matriz ya construida 
 }
 
 
-// La function collide 
+// La function collide nos ayuda a controlar las colisiones de la ficha con cualquier otra ficha o bordes de la cuadricula
 function collide(grid, player) {
   const PIEZA = player.pieza;
   const POSICION = player.pos;
@@ -62,12 +61,9 @@ function merge(grid, player) {
     row.forEach((value, x) => {
       if (value !== 0) {
         grid[y + POSICION.y][x + POSICION.x] = value;
-        console.log(value)
       }
-    }
-    )
-  }
-  )
+    })
+  })
 }
 
 // La funcion drawPieza dibujara la pieza del tetromino dependiendo de los parametros que le llegue como la pieza especifica y su posicion
@@ -130,34 +126,41 @@ function dropMove(direction) {
   }
 }
 
+// La funcion piezaRotate nos ayudara que el tetramino rote siempre 90 grados hacia la derecha
 function piezaRotate() {
-  const posicion = PLAYER.pos.x;
-  let off = 1;
-  rotate(PLAYER.pieza);
+  const POSICION = PLAYER.pos.x; // Se asigna la posicion x a una constante para que siempre tenga la posicion inicial sin actualizar
+  let value = 1; // Se asigna valor para cuando haya una colision y la reinicie a 0
+  rotate(PLAYER.pieza); // Se llama la funcion y como argumento le pasamos la ficha actual
+  // La condicional validara que mientras haya una collision a la hora de rotar, se logre rotar nuevamente sin salirse del canvas
   while (collide(GRID, PLAYER)) {
-    PLAYER.pos.x += off;
-    off = -(off + (off > 0 ? 1 : -1));
-    if (off > PLAYER.pieza[0].length) {
-      rotate(PLAYER.pieza);
-      PLAYER.pos.x = pos;
+    POSICION += value; // Se le suma a la posicion el valor de la variable value
+    value = -(value + (value > 0 ? 1 : -1)); // Se valida si la operacion es mayor a 0 que devuelve 1 para volver a la izquierda o -1 para volver a la derecha
+    // La condicion valida si value es mayor a la pocion 0 del tetramino lo cual se saldria del canva si no se controla
+    if (value > PLAYER.pieza[0].length) {
+      rotate(PLAYER.pieza); // Se llama la funcion y como argumento le pasamos la ficha actual para que rote nuevamente
+      POSICION = pos; // Se le asigna a la posicion x la posicion que se ha guardado
       return;
     }
   }
 }
 
+// La funcion rotate tiene como parametro la pieza que le llega para realizar la rotacion correctamente
 function rotate(pieza) {
+  // el 1er for recorre verticalmente(eje y) dependiendo de la longitud de la pieza(array)
+  // el 2do for recorre horizontalmente(eje x) dependiendo de cada iteracion en el eje y
   for (let y = 0; y < pieza.length; y++) {
     for (let x = 0; x < y; x++) {
-      [pieza[x][y], pieza[y][x]] = [pieza[y][x], pieza[x][y]];
+      [pieza[x][y], pieza[y][x]] = [pieza[y][x], pieza[x][y]]; // Se sustituye toda la matriz tando en el eje x como en el eje y
     }
   }
-
-  pieza.forEach((row) => row.reverse());
+  // Este forEach recorre la matriz por filas para poder invertirla 
+  pieza.forEach((row) => row.reverse()); // reverse() es un metodo de js que nos ayuda a rotar filas o columnas
 }
 
+// La funcion reset nos ayudara a resetear las pociones de cada nueva ficha que se genere y no se sobrepponga en la que ya este
 function reset() {
-  PLAYER.pos.x = 0;
-  PLAYER.pos.y = 0;
+  PLAYER.pos.x = 0; // Se reinicia posision en x
+  PLAYER.pos.y = 0; // Se reinicia posision en y
 }
 
 // El evento nos ayudara a captar el sonido de las teclas especificas a la hora de mover el tetramino
