@@ -63,6 +63,20 @@ function draw() {
   drawPieza(PLAYER.pieza, PLAYER.pos); // La llamada a la funcion #2 Dibuja la pieza actual de la constante player
 }
 
+
+// La funcion drop realiza la sentencia que controla la caida de cada ficha cada vez que colisione con el borde inferior de la cuadricula u otra ficha para que no se sobreponga.
+function drop() {
+  PLAYER.pos.y++; // La pieza cae en el eje y
+  /* La condicinal valida si encuentra una colision(True), cuando llamamos la funcion collide y como argumento se le da la cuadricula y el objeto de la ficha.
+   Cuando esta sea(True) en la posicion y se le restara para que no continue bajando y se controle la caida dentro del canvas */
+  if (collide(GRID, PLAYER)) {
+    PLAYER.pos.y--; // Se resta 1 a la posicion eje y de la ficha cada vez que encuentre una colision para que no continue bajando y quede statica en la possicion que llegue.
+    merge(GRID, PLAYER);
+    reset(); // Se llama la funcion reset cada vez que una ficha encuentra una colision, lo cual, aparece una nuevamente
+  }
+  dropCounter = 0; // Se inicializa nuevamente el contador para que haga el efecto de caer lentamente
+}
+
 // La funcion update nos ira actualizando el tiempo que le llegue como parametro - el tiempo anterior, se redibujara el canvas cada vez que se llame esta funcion
 function update(time = 0) {
   const DELTA_TIME = (time - lastTime);
@@ -82,11 +96,11 @@ function update(time = 0) {
 document.addEventListener('keydown', (event) => {
   // Condicion anidada si escucha las techas ⬇️➡️⬅️ o las teclas s-w-a-d
   if (event.key === 'ArrowDown' || event.key === 's') {
-    PLAYER.pieza.y++; // La pieza cae en el eje y
+    drop(); // La pieza cae en el eje y
   } else if (event.key === 'ArrowLeft' || event.key === 'a') {
-    PLAYER.pieza.x--; // La pieza se mueve hacia la izquierda en el eje x
+    dropMove(-1); // La pieza se mueve hacia la izquierda en el eje x
   } else if (event.key === 'ArrowRight' || event.key === 'd') {
-    PLAYER.pieza.x++; // La pieza se mueve hacia la derecha en el eje y
+    dropMove(1); // La pieza se mueve hacia la derecha en el eje y
   }
 })
 
