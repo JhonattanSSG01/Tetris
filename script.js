@@ -39,6 +39,22 @@ function createMatriz(width, height) {
   return MATRIZ; // Devuelve la matriz ya construida 
 }
 
+// La function collide 
+function collide(grid, player) {
+  const PIEZA = player.pieza;
+  const POSICION = player.pos;
+
+  for (let y = 0; y < PIEZA.length; y++) {
+    for (let x = 0; x < PIEZA[y].length; x++) {
+      if (PIEZA[y][x] !== 0 && (grid[y + POSICION.y] && grid[y + POSICION.y][x + POSICION.x]) !== 0) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 // La funcion drawPieza dibujara la pieza del tetromino dependiendo de los parametros que le llegue como la pieza especifica y su posicion
 function drawPieza(pieza, posicion) {
   // Se realizan el forEach anidado para recorrer cada indice verticalmente y horizontalmente
