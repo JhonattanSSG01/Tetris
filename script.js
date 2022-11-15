@@ -68,9 +68,42 @@ function update(time = 0) {
   const DELTA_TIME = (time - lastTime);
   lastTime = time;
   dropCounter += DELTA_TIME; // Se le asigna al contador el tiempo que resulte cada vez que se resta el tiempo actual con el anterior en cada llamada de la animacion sobre la funcion
-
+  // la condicion valida si el conteo es mayor al intervalo asignado al principio para realizar la sentencia y vaya cayendo la pieza 
+  if (dropCounter > dropInterval) {
+    drop();
+  }
   draw(); // Llamar funcion draw para redibujar
   requestAnimationFrame(update); // Se ira llamando cada vez que se llama la fuction update con el parametro time
   /* Informa al navegador que quieres realizar una animación y solicita que el navegador programe el repintado de la ventana para
   el próximo ciclo de animación. El método acepta como argumento una función a la que llamar antes de efectuar el repintado.*/
 }
+
+// El evento nos ayudara a captar el sonido de las teclas especificas a la hora de mover el tetramino
+document.addEventListener('keydown', (event) => {
+  // Condicion anidada si escucha las techas ⬇️➡️⬅️ o las teclas s-w-a-d
+  if (event.key === 'ArrowDown' || event.key === 's') {
+    drop(); // La pieza cae en el eje y
+  } else if (event.key === 'ArrowLeft' || event.key === 'a') {
+    dropMove(-1); // La pieza se mueve hacia la izquierda en el eje x
+  } else if (event.key === 'ArrowRight' || event.key === 'd') {
+    dropMove(1); // La pieza se mueve hacia la derecha en el eje y
+  } 
+})
+
+update();
+
+// El evento nos ayudara a captar el sonido de las teclas especificas a la hora de mover el tetramino
+document.addEventListener('keydown', (event) => {
+  // Condicion anidada si escucha las techas ⬇️➡️⬅️ o las teclas s-w-a-d
+  if (event.key === 'ArrowDown' || event.key === 's') {
+    drop(); // La pieza cae en el eje y
+  } else if (event.key === 'ArrowLeft' || event.key === 'a') {
+    dropMove(-1); // La pieza se mueve hacia la izquierda en el eje x
+  } else if (event.key === 'ArrowRight' || event.key === 'd') {
+    dropMove(1); // La pieza se mueve hacia la derecha en el eje y
+  } else if (event.key === 'ArrowUp' || event.key === 'w') {
+    piezaRotate();
+  }
+})
+
+update();
