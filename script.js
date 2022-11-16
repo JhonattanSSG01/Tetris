@@ -3,43 +3,50 @@ let dropInterval = 1000; // Se declara e inicializa el intervalo de tiempo
 let dropCounter = 0; // Se decalra e inicializa en cero el contador de cada caida de la pieza
 
 // Obtener un numero aleatorio
-let colorRandom = Math.floor(Math.random() * 255); 
+let colorRandom = Math.floor(Math.random() * 200); 
 let colorRandom1 = Math.floor(Math.random() * 150);
-let colorRandom2 = Math.floor(Math.random() * 50);
+let colorRandom2 = Math.floor(Math.random() * 80);
 
-const CANVAS = document.querySelector('canvas'); // Se declara constante para llamar la etiqueta canvas
-const PINCEL = CANVAS.getContext('2d'); // Se declara constante para contextualizar que formato de dibujo manejaremos
+const btn = document.getElementById('button');
+
+// Se declara constante para llamar la etiqueta canvas por el id
+const CANVAS = document.getElementById('grid'); // Tablero
+const SPACE_NEXT = document.getElementById('next'); // Tablero de ficha siguiente
+// Se declara constante para contextualizar que formato de dibujo manejaremos
+const PINCEL = CANVAS.getContext('2d'); 
+const NEXT_TETRAMINO = SPACE_NEXT.getContext('2d'); 
 const GRID = createMatriz(10, 20); // Se decalara constante para la creacion de la matriz.
-
 const COLORS = [ // Array donde se alamcenaran los colores diferentes para cada Tritomino
   null, // El 0 no lleva color, ya que, no se debe pintar para que se visualize la ficha correctamente
   `rgb(${colorRandom},${colorRandom1},${colorRandom2})`,
-  `rgb(${colorRandom1},${colorRandom1},${colorRandom2})`,
-  `rgb(${colorRandom2},${colorRandom1},${colorRandom2})`,
-  `rgb(${colorRandom1},${colorRandom},${colorRandom2})`,
-  `rgb(${colorRandom},${colorRandom1},${colorRandom})`,
   `rgb(${colorRandom2},${colorRandom1},${colorRandom})`,
-  `rgb(${colorRandom2},${colorRandom},${colorRandom2})`
+  `rgb(${colorRandom2},${colorRandom1},${colorRandom2})`,
+  `rgb(${colorRandom1},${colorRandom2},${colorRandom1})`,
+  `rgb(${colorRandom},${colorRandom1},${colorRandom})`,
+  `rgb(${colorRandom},${colorRandom2},${colorRandom})`,
+  `rgb(${colorRandom2},${colorRandom2},${colorRandom1})`
 ]
 const PLAYER = {
   pos: { x: 0, y: 0 }, // Posiciones
+  pieza: null, // Tetramino
   score: 0, // Puntaje
-  pieza: null
+  line: 0, // Lineas
+  level: 0, // Niveles
+  next: null // Ficha siguiente
 }
 
-PINCEL.scale(45, 45);
-// 200 / 20 = 10
-// 400 / 20 = 20
-// 10 columnas y 20 filas
+
+PINCEL.scale(45, 45); // Scala de la cuadricula
+NEXT_TETRAMINO.scale(45, 45); // Scala de la cuadricula pequeña
 
 // La funcion createTetra nos ayudara a ir creando una pieza diferente cada vez que se genere una nueva
 function createTetra(tipo){
   // La condicional lo que validara es la forma de la ficha que vaya llegando como parametro de la funcion
   if(tipo === 'T'){ // Tetromino T
     return [ // Devuelve la matriz // Array bidimensional 
-      [0, 0, 0],
       [1, 1, 1],
       [0, 1, 0],
+      [0, 0, 0],
     ]; 
   } else if(tipo === 'O'){ // Tetromino O
     return [ 
@@ -127,6 +134,24 @@ function merge(grid, player) {
   })
 }
 
+// La funcion drawTetraNext pintara el canvas donde se visualizara la figura que contine 
+function drawTetraNext(pieza, posicion){
+  // Dibuja el canvas con el color y las medidas especificadas
+  NEXT_TETRAMINO.fillStyle = 'rgb(240,240,240)';
+  NEXT_TETRAMINO.fillRect(0, 0, SPACE_NEXT.width, SPACE_NEXT.height);
+
+  // Se realizan el forEach anidado para recorrer cada indice verticalmente y horizontalmente
+  pieza.forEach((row, y) => {
+    row.forEach((value, x) => {
+      // La considional valida si el valor llega diferente a 0 dibujara el tetramino
+      if (value !== 0) {
+        NEXT_TETRAMINO.fillStyle = COLORS[value]; // Color del tetramino siguiente
+        NEXT_TETRAMINO.fillRect(x + posicion.x, y + posicion.y, .8, .8); // Pocicion del rectangulo que se dibujara dependiendo de las pocisones en x - y.
+      }
+    })
+  });
+}
+
 // La funcion drawPieza dibujara la pieza del tetromino dependiendo de los parametros que le llegue como la pieza especifica y su posicion
 function drawPieza(pieza, posicion) {
   // Se realizan el forEach anidado para recorrer cada indice verticalmente y horizontalmente
@@ -135,7 +160,7 @@ function drawPieza(pieza, posicion) {
       // La considional valida si el valor llega diferente a 0 dibujara el tetramino
       if (value !== 0) {
         PINCEL.fillStyle = COLORS[value]; // Color del tetramino
-        PINCEL.fillRect(x + posicion.x, y + posicion.y, .8, .8); // Pocicion del rectangulo que se dibujara dependiendo de las pocisones en x - y, y se pone el tamaoño que tendra
+        PINCEL.fillRect(x + posicion.x, y + posicion.y, .8, .8); // Pocicion del rectangulo que se dibujara dependiendo de las pocisones en x - y, y se pone el tamaño que tendra
       }
     })
   });
@@ -146,8 +171,9 @@ function draw() {
   // Dibuja el canvas con el color y las medidas especificadas
   PINCEL.fillStyle = 'rgb(240,240,240)';
   PINCEL.fillRect(0, 0, CANVAS.width, CANVAS.height); // (x,y, ancho, alto)
-  drawPieza(GRID, { x: 0, y: 0 }); // La llamada a la funcion #1 Redibuja la cuadricula todos los espaciones con posicion x = 0 / y = 0
-  drawPieza(PLAYER.pieza, PLAYER.pos); // La llamada a la funcion #2 Dibuja la pieza actual de la constante player
+  drawPieza(GRID, { x: 0, y: 0 }); // La llamada a la funcion #1 Redibuja la cuadricula con posicion x = 0 / y = 0
+  drawPieza(PLAYER.pieza, PLAYER.pos); // La llamada a la funcion #2 Dibuja la pieza actual de la constante PLAYER
+  drawTetraNext(PLAYER.next, { x: .5, y: .5 }); // La llamada a la funcion dibuja la ficha siguiente con posicion en x / y 
 }
 
 // La funcion gridDelete ira eliminando cada fila que se complete con numeros diferentes a 0 y se le agrega 10 puntos cada vez que se elimine una fila
@@ -168,6 +194,11 @@ function gridDelete(){
       y++;
   
       PLAYER.score += (1 * 10); // Se multiplica por 10 cada vez que hace una linea
+      PLAYER.line++; // Incrementa en uno cada vez que se elimine la linea
+      // La condicion validara que cada tres lineas se incrementara en un el nivel
+      if(PLAYER.line % 3 === 0){
+        PLAYER.level++;
+      } 
     }
 
   }
@@ -179,7 +210,7 @@ function update(time = 0) {
   dropCounter += DELTA_TIME; // Se le asigna al contador el tiempo que resulte cada vez que se resta el tiempo actual con el anterior en cada llamada de la animacion sobre la funcion
   // la condicion valida si el conteo es mayor al intervalo asignado al principio para realizar la sentencia y vaya cayendo la pieza 
   if (dropCounter > dropInterval) {
-    drop();
+    dropDown();
   }
   draw(); // Llamar funcion draw para redibujar
   requestAnimationFrame(update); // Se ira llamando cada vez que se llama la fuction update con el parametro time
@@ -188,7 +219,7 @@ function update(time = 0) {
 }
 
 // La funcion drop realiza la sentencia que controla la caida de cada ficha cada vez que colisione con el borde inferior de la cuadricula u otra ficha para que no se sobreponga.
-function drop() {
+function dropDown() {
   PLAYER.pos.y++; // La pieza cae en el eje y
   /* La condicinal valida si encuentra una colision(True), cuando llamamos la funcion collide y como argumento se le da la cuadricula y el objeto de la ficha.
    Cuando esta sea(True) en la posicion y se le restara para que no continue bajando y se controle la caida dentro del canvas */
@@ -207,7 +238,7 @@ function dropMove(direction) {
   PLAYER.pos.x += direction; // Aumenta cada vez que se mueva lateralmente dependiendo del parametro que reciba la funcion dropMove
   // La condicional valida si encuentra la ficha una colision lateralmente, lo cual, esa direccion se reiniciaria
   if (collide(GRID, PLAYER)) {
-    PLAYER.pos.x -= direction; // Se inicializa la posicion al valor original o inicialmente.
+    PLAYER.pos.x -= direction; // Se inicializa la posicion al valor original o inicial.
   }
 }
 
@@ -242,26 +273,57 @@ function rotate(pieza) {
   pieza.forEach((row) => row.reverse()); // reverse() es un metodo de js que nos ayuda a rotar filas o columnas
 }
 
+// Swal.fire({
+//   title: 'Sweet!',
+//   text: 'Modal with a custom image.',
+//   imageUrl: 'https://unsplash.it/400/200',
+//   imageWidth: 400,
+//   imageHeight: 200,
+//   imageAlt: 'Custom image',
+// })
+
 // La funcion reset nos ayudara a resetear las pociones de cada nueva ficha que se genere y no se sobrepponga en la que ya este
 function reset() {
-  const TETRAMINOS = 'TOLJISZ'; // Se declara la constante e inicializa con una cadena de texto que tendra las letras los cuales son los tetraminos 
-  PLAYER.pieza = createTetra(TETRAMINOS[Math.floor(Math.random() * TETRAMINOS.length)]); // Se le asigna a la ficha la funcion createTetra la cual como argumento se le da la posicion aleatoriamente de la cadena de texto que se guarda en la constante TERAMINOS
-  PLAYER.pos.x = (Math.floor(GRID[0].length / 3)); // Se reinicia posision en x centradamente
+  const TETRAMINOS = 'TLJOISZ'; // Se declara la constante e inicializa con una cadena de texto que tendra las letras los cuales son los tetraminos 
+  dropInterval = 1000 - (PLAYER.level*100); // Se le resta al tiempo cada vez que se pase un nivel para que asi aumente la velocidad mientras se aumentan los niveles
+  
+  // La condicion valida si inicialmente esta nulo o no
+  if(PLAYER.next === null){
+    // Se le asigna a la ficha la funcion createTetra la cual como argumento se le da la posicion aleatoriamente de la cadena de texto que se guarda en la constante TERAMINOS y genera la ficha
+    PLAYER.pieza = createTetra(TETRAMINOS[Math.floor(Math.random() * TETRAMINOS.length)]); 
+  } else {
+    PLAYER.pieza = PLAYER.next; // Se le asigna la ficha siguiente la cual sera la nueva que se genere.
+  }
+  
+  PLAYER.next = createTetra(TETRAMINOS[Math.floor(Math.random() * TETRAMINOS.length)]); // Se le asigna la nueva ficha que continuara de la actual
+  PLAYER.pos.x = (Math.floor(GRID[0].length / 3)); // Se reinicia posision en x centradamente 
   PLAYER.pos.y = 0; // Se reinicia posision en y
+  
+  // La condicion valida si hay colision para reiniciar de nuevo el juego con los valores inialiales
+  if(collide(GRID, PLAYER)){
+    // Derrota
+    GRID.forEach((row) => row.fill(0));
+    PLAYER.score = 0;
+    PLAYER.line = 0;
+    PLAYER.level = 0;
+    update();
+  }
   updateScore(); // Se llama la funcion para que vaya actualizando cada vez que haya una nueva ficha dependiendo de si se elimino o no la fila
   update(); // Se llama la funcion para que vaya actualizando la animaciopnde de los fotogramas
 }
 
-// La funcion updateScore tiene como funcionalidad el actualizar el puntaje, se le asigna al html el valor que este actualmente por medio del DOM para visualizarlo siempre en el navegador
+// La funcion updateScore tiene como funcionalidad el actualizar el puntaje, el nivel y las lineas que se eliminen, se le asigna al html el valor que este actualmente por medio del DOM para visualizarlo siempre en el navegador
 function updateScore(){
   document.getElementById('score').innerHTML = PLAYER.score;
+  document.getElementById('line').innerHTML = PLAYER.line;
+  document.getElementById('level').innerHTML = PLAYER.level;
 }
 
 // El evento nos ayudara a captar el sonido de las teclas especificas a la hora de mover el tetramino
 document.addEventListener('keydown', (event) => {
   // Condicion anidada si escucha las techas ⬇️➡️⬅️ o las teclas s-w-a-d
   if (event.key === 'ArrowDown' || event.key === 's') {
-    drop(); // La pieza cae en el eje y
+    dropDown(); // La pieza cae en el eje y
   } else if (event.key === 'ArrowLeft' || event.key === 'a') {
     dropMove(-1); // La pieza se mueve hacia la izquierda en el eje x
   } else if (event.key === 'ArrowRight' || event.key === 'd') {
@@ -269,6 +331,20 @@ document.addEventListener('keydown', (event) => {
   } else if (event.key === 'ArrowUp' || event.key === 'w') {
     piezaRotate();
   }
+})
+
+btn.addEventListener('click', (event) => {
+  // Condicion anidada si escucha las techas ⬇️➡️⬅️ o las teclas s-w-a-d
+  
+  piezaRotate(); // La pieza cae en el eje y
+  
+  // } else if (event.key === 'ArrowLeft' || event.key === 'a') {
+  //   dropMove(-1); // La pieza se mueve hacia la izquierda en el eje x
+  // } else if (event.key === 'ArrowRight' || event.key === 'd') {
+  //   dropMove(1); // La pieza se mueve hacia la derecha en el eje y
+  // } else if (event.key === 'ArrowUp' || event.key === 'w') {
+  //   piezaRotate();
+  // }
 })
 
 reset();// Se llama la funcion para que siempre reinice y salga la primera ficha

@@ -13,6 +13,7 @@
       margin: auto;
       display: flex;
       justify-content: space-evenly;
+      align-items: center;
       flex-direction: row-reverse;
       background-image: url(https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80);
       background-repeat: no-repeat;
@@ -23,32 +24,58 @@
       padding: .5rem;
       border-radius: 10px;
       box-shadow: 0 10px 30px 10px rgb(181, 181, 181);
-      align-self: center;
       opacity: .9;
     }
-    #score {
-      width: 20%;
+    section{
+      flex-basis: 25%;
+    }
+    #score, #line, #level {
       padding: 1rem;
       margin: 1rem;
       font-size: 3rem;
       color: #fff;
       border-radius: 10px;
       border: 2px dashed #B9B9B9;
-      box-shadow: 10px 8px 35px rgb(174, 173, 173);
-      align-self: flex-start;
-      background-color: rgba(161, 158, 158, 0.5);
+      box-shadow: 10px 8px 35px rgb(57, 57, 57);
+      background-color: rgba(68, 66, 66, 0.5);
+    }
+    #score::before{
+      content: 'Puntaje: ';
+    }
+    #line::before{
+      content: 'Lineas: ';
+    }
+    #level::before{
+      content: 'Nivel: ';
+    }
+
+    button{
+      background-color: aqua;
+      font-size: 3rem;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
 
-  <div id="score"></div>
-  <canvas width="442" height="900"></canvas> <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
+  <section>
+    <div id="score"></div>
+    <div id="line"></div>
+    <div id="level"></div>
+    <div>
+      <button id="button">
+        flecha
+      </button>
+    </div>
+  </section>
+  <canvas id="next" width="170" height="220"></canvas>
+  <canvas id="grid" width="440" height="895"></canvas> <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
   <!-- 
     Vectores
     Matriz bidemensionales 
   -->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- js -->
   <script src="script.js"></script> <!-- Se referencia el archivo externo de js -->
 </body>
 
