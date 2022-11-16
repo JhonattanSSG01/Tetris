@@ -142,27 +142,34 @@ function drawPieza(pieza, posicion) {
 // La funcion draw pintara el canvas
 function draw() {
   // Dibuja el canvas con el color y las medidas especificadas
-  PINCEL.fillStyle = '#b9b9b9';
+  PINCEL.fillStyle = 'rgb(240,240,240)';
   PINCEL.fillRect(0, 0, CANVAS.width, CANVAS.height); // (x,y, ancho, alto)
   drawPieza(GRID, { x: 0, y: 0 }); // La llamada a la funcion #1 Redibuja la cuadricula todos los espaciones con posicion x = 0 / y = 0
   drawPieza(PLAYER.pieza, PLAYER.pos); // La llamada a la funcion #2 Dibuja la pieza actual de la constante player
 }
 
+// La funcion gridDelete ira eliminando cada fila que se complete con numeros diferentes a 0 y se le agrega 10 puntos cada vez que se elimine una fila
 function gridDelete(){
-  let count = 1;
-  outer : for(let y = GRID.length - 1; y > 0; y--){
-    for(x = 0; x < GRID.length; x++){
-      if(GRID[y][x] === 0){
-      continue outer;
-      }
-    }
-    const ROW = GRID.splice(y,1)[0].fill(0);
-    GRID.unshift(ROW);
-    y++;
 
-    PLAYER.score += (count * 10);
+  /* outer se refiere a un label que proporciona una instrucción con un identificador que te permite hacer referencia a ella en otra parte de tu programa. 
+  Por ejemplo, puedes usar una etiqueta para identificar un bucle y luego usar las declaraciones break o continue para indicar si un programa debe 
+  interrumpir el bucle o continuar su ejecución. */
+
+    outer :for(let y = GRID.length - 1; y > 0; y--){
+      for(x = 0; x < GRID.length; x++){
+        if(GRID[y][x] === 0){
+          continue outer;
+        }
+      }
+
+      const ROW = GRID.splice(y, 1)[0].fill(0); // El método splice() cambia el contenido de un array eliminando elementos existentes y/o agregando nuevos elementos.
+      GRID.unshift(ROW);  //El método unshift() agrega uno o más elementos al inicio del array, y devuelve la nueva longitud del array.
+      y++;
+  
+      PLAYER.score += (1 * 10); // Se multiplica por 10 cada vez que hace una linea
+    }
+
   }
-}
 
 // La funcion update nos ira actualizando el tiempo que le llegue como parametro - el tiempo anterior, se redibujara el canvas cada vez que se llame esta funcion
 function update(time = 0) {

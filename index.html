@@ -6,12 +6,45 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tetris | JavaScript y HTML</title>
+  <style>
+    body{
+      width: 80vw;
+      height: 100vh;
+      margin: auto;
+      display: flex;
+      justify-content: space-evenly;
+      flex-direction: row-reverse;
+      background-image: url(https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+    canvas{
+      padding: .5rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px 10px rgb(181, 181, 181);
+      align-self: center;
+      opacity: .9;
+    }
+    #score {
+      width: 20%;
+      padding: 1rem;
+      margin: 1rem;
+      font-size: 3rem;
+      color: #fff;
+      border-radius: 10px;
+      border: 2px dashed #B9B9B9;
+      box-shadow: 10px 8px 35px rgb(174, 173, 173);
+      align-self: flex-start;
+      background-color: rgba(161, 158, 158, 0.5);
+    }
+  </style>
 </head>
 
 <body>
 
   <div id="score"></div>
-  <canvas width="450" height="900"></canvas> <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
+  <canvas width="442" height="900"></canvas> <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
   <!-- 
     Vectores
     Matriz bidemensionales 
