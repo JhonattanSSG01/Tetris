@@ -2,12 +2,15 @@ let = lastTime = 0;
 let dropInterval = 1000; // Se declara e inicializa el intervalo de tiempo
 let dropCounter = 0; // Se decalra e inicializa en cero el contador de cada caida de la pieza
 
+// Obtener un numero aleatorio
+let colorRandom = Math.floor(Math.random() * 255); 
+let colorRandom1 = Math.floor(Math.random() * 150);
+let colorRandom2 = Math.floor(Math.random() * 50);
+
 const CANVAS = document.querySelector('canvas'); // Se declara constante para llamar la etiqueta canvas
 const PINCEL = CANVAS.getContext('2d'); // Se declara constante para contextualizar que formato de dibujo manejaremos
 const GRID = createMatriz(10, 20); // Se decalara constante para la creacion de la matriz.
-let colorRandom = Math.floor(Math.random() * 255); // Obtener un numero aleatorio
-let colorRandom1 = Math.floor(Math.random() * 150);
-let colorRandom2 = Math.floor(Math.random() * 50);
+
 const COLORS = [ // Array donde se alamcenaran los colores diferentes para cada Tritomino
   null, // El 0 no lleva color, ya que, no se debe pintar para que se visualize la ficha correctamente
   `rgb(${colorRandom},${colorRandom1},${colorRandom2})`,
@@ -94,11 +97,11 @@ function createMatriz(width, height) {
 }
 
 
-// La function collide nos ayuda a controlar las colisiones de la ficha con cualquier otra ficha o bordes de la cuadricula
+// La function collide nos ayuda a controlar las colisiones de la ficha con cualquier otra ficha o parte inferior de la cuadricula
 function collide(grid, player) {
   const PIEZA = player.pieza;
   const POSICION = player.pos;
-
+  // Se recorre verticalmente y horizontalmente para verificar cada indice(cuadrito) si colisona con algo, es decir si los indices son diferentes a 0 lo cual, hace referencia a una colision
   for (let y = 0; y < PIEZA.length; y++) {
     for (let x = 0; x < PIEZA[y].length; x++) {
       if (PIEZA[y][x] !== 0 && (grid[y + POSICION.y] && grid[y + POSICION.y][x + POSICION.x]) !== 0) {
@@ -106,11 +109,10 @@ function collide(grid, player) {
       }
     }
   }
-
   return false;
 }
 
-
+// La funcion merge nos ayudara a controlar que la ficha no se sobreponga o continue bajando cuando colisione con otra ficha
 function merge(grid, player) {
   const PIEZA = player.pieza;
   const POSICION = player.pos;
@@ -150,7 +152,6 @@ function draw() {
 
 // La funcion gridDelete ira eliminando cada fila que se complete con numeros diferentes a 0 y se le agrega 10 puntos cada vez que se elimine una fila
 function gridDelete(){
-
   /* outer se refiere a un label que proporciona una instrucción con un identificador que te permite hacer referencia a ella en otra parte de tu programa. 
   Por ejemplo, puedes usar una etiqueta para identificar un bucle y luego usar las declaraciones break o continue para indicar si un programa debe 
   interrumpir el bucle o continuar su ejecución. */
@@ -193,10 +194,10 @@ function drop() {
    Cuando esta sea(True) en la posicion y se le restara para que no continue bajando y se controle la caida dentro del canvas */
   if (collide(GRID, PLAYER)) {
     PLAYER.pos.y--; // Se resta 1 a la posicion eje y de la ficha cada vez que encuentre una colision para que no continue bajando y quede statica en la possicion que llegue.
-    merge(GRID, PLAYER);
+    merge(GRID, PLAYER); // Se llama la funcion y se le da como argumento la cuadricula y el objeto de las fichas para validar caundo encuentre una colision con otra ficha y se detenga
     reset(); // Se llama la funcion reset cada vez que una ficha encuentra una colision, lo cual, aparece una nuevamente
-    gridDelete();
-    updateScore();
+    gridDelete(); // Se llama la funcion cuando se encuentre con colision pero a la vez si se completa una fila la cual se elimina.
+    updateScore(); // Se llama la funcion para que vaya actualizando cada vez que encuentre una colision dependiendo si se elimino o no la fila
   }
   dropCounter = 0; // Se inicializa nuevamente el contador para que haga el efecto de caer lentamente
 }
@@ -247,8 +248,11 @@ function reset() {
   PLAYER.pieza = createTetra(TETRAMINOS[Math.floor(Math.random() * TETRAMINOS.length)]); // Se le asigna a la ficha la funcion createTetra la cual como argumento se le da la posicion aleatoriamente de la cadena de texto que se guarda en la constante TERAMINOS
   PLAYER.pos.x = (Math.floor(GRID[0].length / 3)); // Se reinicia posision en x centradamente
   PLAYER.pos.y = 0; // Se reinicia posision en y
+  updateScore(); // Se llama la funcion para que vaya actualizando cada vez que haya una nueva ficha dependiendo de si se elimino o no la fila
+  update(); // Se llama la funcion para que vaya actualizando la animaciopnde de los fotogramas
 }
 
+// La funcion updateScore tiene como funcionalidad el actualizar el puntaje, se le asigna al html el valor que este actualmente por medio del DOM para visualizarlo siempre en el navegador
 function updateScore(){
   document.getElementById('score').innerHTML = PLAYER.score;
 }
@@ -267,6 +271,4 @@ document.addEventListener('keydown', (event) => {
   }
 })
 
-reset();
-updateScore();
-update();
+reset();// Se llama la funcion para que siempre reinice y salga la primera ficha
