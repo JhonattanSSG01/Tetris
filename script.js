@@ -324,6 +324,7 @@ function reset() {
   update(); // Se llama la funcion para que vaya actualizando la animaciopnde de los fotogramas
 }
 
+/* La función permitira pausar el juego y la musica a traves del condicional que se envia como parametro y el evento onclick del boton pausa*/
 function fPause(pauser) {
   pause = pauser;
   if (pause) {
