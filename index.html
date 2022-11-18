@@ -5,72 +5,232 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
   <title>Tetris | JavaScript y HTML</title>
   <style>
-    body{
-      width: 80vw;
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+   *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    .container {
+      width: 100%;
       height: 100vh;
-      margin: auto;
+      padding: 1.5rem 0;
       display: flex;
       justify-content: space-evenly;
-      align-items: center;
-      flex-direction: row-reverse;
       background-image: url(https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80);
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center;
     }
-    canvas{
-      padding: .5rem;
+
+    canvas {
+      padding: .3rem;
       border-radius: 10px;
       box-shadow: 0 10px 30px 10px rgb(181, 181, 181);
-      opacity: .9;
-    }
-    section{
-      flex-basis: 25%;
-    }
-    #score, #line, #level {
-      padding: 1rem;
-      margin: 1rem;
-      font-size: 3rem;
-      color: #fff;
-      border-radius: 10px;
-      border: 2px dashed #B9B9B9;
-      box-shadow: 10px 8px 35px rgb(57, 57, 57);
-      background-color: rgba(68, 66, 66, 0.5);
-    }
-    #score::before{
-      content: 'Puntaje: ';
-    }
-    #line::before{
-      content: 'Lineas: ';
-    }
-    #level::before{
-      content: 'Nivel: ';
+      opacity: .8;
     }
 
-    button{
-      background-color: aqua;
-      font-size: 3rem;
+    .next {
+      text-align: center;
+      align-self: center;
+    }
+
+    .text {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .title{
+      margin: 3rem 0;
+    }
+
+    .title span {
+      display: inline-block;
+      *width: 90%;
+      *background-color: rgba(250, 250, 250, .8);
+      *padding: 1rem;
+      *border-radius: 10px;
+      font-size: 4rem;
+      color: rgba(215, 221, 221, 0.5);
+      text-transform: uppercase;
+      animation: wavly 1s infinite;
+      animation-delay: calc(.1s * var(--i));
+      
+      /*animation: typing 2s steps(22), blink .5s step-end infinite alternate;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid #fff;*/
+    }
+
+    @keyframes wavly {
+      0%,40%,100%{
+        transform: translateY(0);
+      }
+
+      20%{
+        transform: translateY(20px);
+      }
+    }
+    /*
+    @keyframes typing {
+      from {
+        width: 0;
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        border-color: transparent;
+      }
+    }
+    */
+
+    span:nth-of-type(1) {
+      color: #06747c;
+      text-shadow: 8px 5px 25px rgb(16, 170, 182);
+      font-size: 6rem;
+    }
+
+   span:nth-of-type(3) {
+      color: #c52690;
+      text-shadow: 8px 5px 25px rgb(161, 9, 149);
+      font-size: 5rem;
+    }
+
+    .panel > div {
+      display: flex;
+      justify-content: space-between;
+      padding: 1.5rem 1rem;
+      margin: 2rem 0;
+      font-size: 1.8rem;
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 10px 8px 35px rgb(154, 68, 165);
+      background: linear-gradient(45deg, rgb(9, 100, 104), transparent);
+    }
+
+    .panel > div:first-of-type{
+       box-shadow: 10px 8px 35px rgb(178, 182, 183);
+      background: linear-gradient(45deg, rgb(168, 12, 165), transparent);
+    }
+
+    #score::before {
+      content: 'Score:';
+    }
+
+    #line::before {
+      content: 'Lines:';
+    }
+
+    #level::before {
+      content: 'Level:';
+    }
+
+    #record::before {
+      padding-right: 1rem;
+      content: 'Record:';
+    }
+
+    .button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    button {
+      width: 5rem;
+      height: 4rem;
+      margin: 1rem 0;
+      border-radius: 3rem;
+      background-color: rgba(255, 255, 255, .6);
       cursor: pointer;
+      border: none;
+      display: none;
+    }
+
+    .h2 {
+      background-color: rgba(15, 15, 15, .8);
+      padding: 1rem;
+      margin: 2rem;
+      color: #fff;
+      border-radius: 10px;
+      text-transform: uppercase;
+    }
+
+    @media only screen and (max-width: 600px) {
+      button {
+        display: block;
+      }
+
+      #grid {
+        width: 250px;
+        height: 500px;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div class="container">
+    <section class="text">
+      <!-- <h1>te<span>t</span>ris</h1> -->
+      <div class="title">
+        <span style="--i:1">t</span>
+        <span style="--i:2">e</span>
+        <span style="--i:3">t</span>
+        <span style="--i:4">r</span>
+        <span style="--i:5">i</span>
+        <span style="--i:6">s</span>
+      </div>
+      <div class="panel">
+        <div id="record"></div>
+        <div id="score"></div>
+        <div id="line"></div>
+        <div id="level"></div>
+      </div>
+    </section>
+  
+    <section class="next">
+      <canvas id="next" width="170" height="220"></canvas>
+      <h2 class="h2">next</h2>
+    </section>
+  
+    <section>
+      <canvas id="grid" width="440" height="900"></canvas>
+      <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
+      <section class="button">
+        <div>
+          <button id="buttonRotar">
+            <img src="./assets/rotate.svg" alt="Icono de rotar">
+          </button>
+        </div>
+        <div>
+          <button id="buttonDerecha">
+            <img src="./assets/right.svg" alt="Icono de flecha derecha">
+          </button>
+        </div>
+        <div>
+          <button id="buttonIzquierda">
+            <img src="./assets/left.svg" alt="Icono de flecha izquierda">
+          </button>
+        </div>
+        <div>
+          <button id="buttonAbajo">
+            <img src="./assets/down.svg" alt="Icono de flecha abajo">
+          </button>
+        </div>
+      </section>
+    </section>
+  </div>
 
-  <section>
-    <div id="score"></div>
-    <div id="line"></div>
-    <div id="level"></div>
-    <div>
-      <button id="button">
-        flecha
-      </button>
-    </div>
-  </section>
-  <canvas id="next" width="170" height="220"></canvas>
-  <canvas id="grid" width="440" height="895"></canvas> <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
   <!-- 
     Vectores
     Matriz bidemensionales 
