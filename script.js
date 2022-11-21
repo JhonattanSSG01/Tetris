@@ -53,27 +53,23 @@ function createTetra(tipo){
       [0, 1, 0],
       [0, 0, 0],
       ]; 
-      break;
     case "O":
       return [ 
         [2, 2],
         [2, 2],
       ];
-      break;
     case "L":
       return [
         [0, 3, 0],
         [0, 3, 0],
         [0, 3, 3],
       ];
-      break;
     case "J":
       return [
         [0, 4, 0],
         [0, 4, 0],
         [4, 4, 0],
       ];
-      break;
     case "I":
       return [
         [0, 0, 5, 0, 0],
@@ -82,21 +78,18 @@ function createTetra(tipo){
         [0, 0, 5, 0, 0],
         [0, 0, 0, 0, 0]
       ];
-      break;
     case "S":
       return [
         [0, 6, 6],
         [6, 6, 0],
         [0, 0, 0],
       ];
-      break;
     case "Z":
       return [
         [7, 7, 0],
         [0, 7, 7],
         [0, 0, 0],
       ];
-      break;
     default:
       break;
   }  
@@ -303,7 +296,7 @@ function rotate(pieza) {
 function reset() {
 
   const TETRAMINOS = 'TLJOISZ'; // Se declara la constante e inicializa con una cadena de texto que tendra las letras los cuales son los tetraminos 
-  dropInterval = 1000 - (PLAYER.level * 100); // Se le resta al tiempo cada vez que se pase un nivel para que asi aumente la velocidad mientras se aumentan los niveles
+  dropInterval = 1000 - (PLAYER.level * 50); // Se le resta al tiempo cada vez que se pase un nivel para que asi aumente la velocidad mientras se aumentan los niveles
 
   // La condicion valida si inicialmente esta nulo o no
   if (PLAYER.next === null) {
@@ -330,27 +323,30 @@ function reset() {
     PLAYER.score = 0;
     PLAYER.line = 0;
     PLAYER.level = 0;
+    
+    document.getElementById("sound").pause();
+    alert('perdiste');
     update();
-    //alert();
+    document.getElementById("sound").play();
   }
 
   updateScore(); // Se llama la funcion para que vaya actualizando cada vez que haya una nueva ficha dependiendo de si se elimino o no la fila
   update(); // Se llama la funcion para que vaya actualizando la animaciopnde de los fotogramas
 }
 
-function alert() {
-  Swal.fire({
-    title: '¿Quieres volver a jugar?',
-    imageUrl: 'https://images.alphacoders.com/115/1153447.jpg',
-    imageWidth: 400,
-    imageHeight: 200,
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Si',
-    // })
-  });
-}
+// function alert() {
+//   Swal.fire({
+//     title: '¿Quieres volver a jugar?',
+//     imageUrl: 'https://images.alphacoders.com/115/1153447.jpg',
+//     imageWidth: 400,
+//     imageHeight: 200,
+//     showCancelButton: true,
+//     confirmButtonColor: '#3085d6',
+//     cancelButtonColor: '#d33',
+//     confirmButtonText: 'Si',
+//     // })
+//   });
+// }
 
 function welcome() {
   Swal.fire({

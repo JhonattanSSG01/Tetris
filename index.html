@@ -6,217 +6,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
   <title>Tetris | JavaScript y HTML</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Press Start 2P', cursive;
-    }
-
-    .container {
-      width: 100%;
-      height: 100vh;
-      padding: 1.5rem 0;
-      display: flex;
-      justify-content: space-evenly;
-      background-image: url(https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80);
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-    }
-
-    canvas {
-      padding: .3rem;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px 10px rgb(181, 181, 181);
-      opacity: .8;
-    }
-
-    .next {
-      text-align: center;
-      align-self: center;
-    }
-
-    .text {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: center;
-    }
-
-    .title {
-      margin: 3rem 0;
-    }
-
-    .title span {
-      display: inline-block;
-      *width: 90%;
-      *background-color: rgba(250, 250, 250, .8);
-      *padding: 1rem;
-      *border-radius: 10px;
-      font-size: 4rem;
-      color: rgba(215, 221, 221, 0.5);
-      text-transform: uppercase;
-      animation: wavly 1s infinite;
-      animation-delay: calc(.1s * var(--i));
-
-      /*animation: typing 2s steps(22), blink .5s step-end infinite alternate;
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 3px solid #fff;*/
-    }
-
-    @keyframes wavly {
-
-      0%,
-      40%,
-      100% {
-        transform: translateY(0);
-      }
-
-      20% {
-        transform: translateY(20px);
-      }
-    }
-
-    /*
-    @keyframes typing {
-      from {
-        width: 0;
-      }
-    }
-
-    @keyframes blink {
-      50% {
-        border-color: transparent;
-      }
-    }
-    */
-
-    span:nth-of-type(1) {
-      color: #06747c;
-      text-shadow: 8px 5px 25px rgb(16, 170, 182);
-      font-size: 6rem;
-    }
-
-    span:nth-of-type(3) {
-      color: #c52690;
-      text-shadow: 8px 5px 25px rgb(161, 9, 149);
-      font-size: 5rem;
-    }
-
-    .panel>div {
-      display: flex;
-      justify-content: space-between;
-      padding: 1.5rem 1rem;
-      margin: 2rem 0;
-      font-size: 1.8rem;
-      color: #fff;
-      border-radius: 10px;
-      box-shadow: 10px 8px 35px rgb(154, 68, 165);
-      background: linear-gradient(45deg, rgb(9, 100, 104), transparent);
-    }
-
-    .panel>div:first-of-type {
-      box-shadow: 10px 8px 35px rgb(178, 182, 183);
-      background: linear-gradient(45deg, rgb(168, 12, 165), transparent);
-    }
-
-    #score::before {
-      content: 'Score:';
-    }
-
-    #line::before {
-      content: 'Lines:';
-    }
-
-    #level::before {
-      content: 'Level:';
-    }
-
-    #record::before {
-      padding-right: 1rem;
-      content: 'Record:';
-    }
-
-    .button {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .button>.d-none {
-      border: none;
-      display: none;
-    }
-
-    button {
-      width: 5rem;
-      height: 4rem;
-      margin: 1rem 0;
-      border-radius: 3rem;
-      background-color: rgba(255, 255, 255, .6);
-      cursor: pointer;
-    }
-
-
-
-    .h2 {
-      background-color: rgba(15, 15, 15, .8);
-      padding: 1rem;
-      margin: 2rem;
-      color: #fff;
-      border-radius: 10px;
-      text-transform: uppercase;
-    }
-
-    div.background_tetris {
-      position: absolute;
-      width: 100%;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.7);
-      z-index: 1;
-      display: none;
-    }
-
-    div.UI-Pause {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 300px;
-      height: 200px;
-      margin-top: -100px;
-      margin-left: -150px;
-    }
-
-    @media only screen and (max-width: 600px) {
-      .button button {
-        display: block;
-      }
-
-      #grid {
-        width: 250px;
-        height: 500px;
-      }
-    }
-  </style>
 </head>
 
 <body>
+  <audio id="sound" src="audio/tetrisgameboy1-gameboy.mp3" autoplay loop></audio>
   <div class="container">
-    <audio id="sound" src="audio/soundtrack.mp3" autoplay loop></audio>
-
     <div id="background_tetris" class="background_tetris">
       <div class="UI-Pause">
-        <button onclick="fPause(false)" class="btn">Reiniciar</button>
+        <button onclick="fPause(false)" class="btn">
+          <img src="./assets/play.svg" alt="Icono de play">
+        </button>
       </div>
     </div>
     <section class="text">
-      <!-- <h1>te<span>t</span>ris</h1> -->
       <div class="title">
         <span style="--i:1">t</span>
         <span style="--i:2">e</span>
@@ -224,9 +28,6 @@
         <span style="--i:4">r</span>
         <span style="--i:5">i</span>
         <span style="--i:6">s</span>
-      </div>
-      <div class="btn_group">
-        <button onclick="fPause(true)" class="btn">Pausa</button>
       </div>
       <div class="panel">
         <div id="record"></div>
@@ -237,11 +38,18 @@
     </section>
 
     <section class="next">
-      <canvas id="next" width="170" height="220"></canvas>
-      <h2 class="h2">next</h2>
+      <div class="mini_Canvas">
+        <canvas id="next" width="170" height="220"></canvas>
+        <h2 class="h2">next</h2>
+      </div>
+      <div class="btn_group">
+        <button onclick="fPause(true)" class="btn">
+          <img src="./assets/pause.svg" alt="Icono de pausa">
+        </button>
+      </div>
     </section>
 
-    <section>
+    <section class="canvas">
       <canvas id="grid" width="450" height="900"></canvas>
       <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
       <section class="button">
@@ -273,7 +81,7 @@
     Matriz bidemensionales 
   -->
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- js -->
-  <script src="script.js"></script> <!-- Se referencia el archivo externo de js -->
+  <script src="./script.js"></script> <!-- Se referencia el archivo externo de js -->
 </body>
 
 </html>
