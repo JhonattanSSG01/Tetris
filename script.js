@@ -1,6 +1,7 @@
 let = lastTime = 0;
 let dropInterval = 1000; // Se declara e inicializa el intervalo de tiempo
 let dropCounter = 0; // Se decalra e inicializa en cero el contador de cada caida de la pieza
+let pause = false; 
 
 // Obtener un numero aleatorio
 let colorRandom = Math.floor(Math.random() * 200);
@@ -40,55 +41,65 @@ const PLAYER = {
 }
 
 
-PINCEL.scale(45, 45); // Scala de la cuadricula
-NEXT_TETRAMINO.scale(45, 45); // Scala de la cuadricula pequeña
+PINCEL.scale(45, 45); // Scala de la cuadricula*/
+NEXT_TETRAMINO.scale(45, 45); // Scala de la cuadricula pequeña 
 
 // La funcion createTetra nos ayudara a ir creando una pieza diferente cada vez que se genere una nueva
-function createTetra(tipo) {
-  // La condicional lo que validara es la forma de la ficha que vaya llegando como parametro de la funcion
-  if (tipo === 'T') { // Tetromino T
-    return [ // Devuelve la matriz // Array bidimensional 
+function createTetra(tipo){
+  switch (tipo) {// El Switch validara la forma de la ficha que vaya llegando como parametro de la funcion
+    case "T":
+      return [ // Devuelve la matriz // Array bidimensional 
       [1, 1, 1],
       [0, 1, 0],
       [0, 0, 0],
-    ];
-  } else if (tipo === 'O') { // Tetromino O
-    return [
-      [2, 2],
-      [2, 2],
-    ];
-  } else if (tipo === 'L') { // Tetromino L
-    return [
-      [0, 3, 0],
-      [0, 3, 0],
-      [0, 3, 3],
-    ];
-  } else if (tipo === 'J') { // Tetromino J
-    return [
-      [0, 4, 0],
-      [0, 4, 0],
-      [4, 4, 0],
-    ];
-  } else if (tipo === 'I') { // Tetromino I
-    return [
-      [0, 5, 0, 0],
-      [0, 5, 0, 0],
-      [0, 5, 0, 0],
-      [0, 5, 0, 0],
-    ];
-  } else if (tipo === 'S') { // Tetromino S
-    return [
-      [0, 6, 6],
-      [6, 6, 0],
-      [0, 0, 0],
-    ];
-  } else if (tipo === 'Z') { // Tetromino z
-    return [
-      [7, 7, 0],
-      [0, 7, 7],
-      [0, 0, 0],
-    ];
-  }
+      ]; 
+      break;
+    case "O":
+      return [ 
+        [2, 2],
+        [2, 2],
+      ];
+      break;
+    case "L":
+      return [
+        [0, 3, 0],
+        [0, 3, 0],
+        [0, 3, 3],
+      ];
+      break;
+    case "J":
+      return [
+        [0, 4, 0],
+        [0, 4, 0],
+        [4, 4, 0],
+      ];
+      break;
+    case "I":
+      return [
+        [0, 0, 5, 0, 0],
+        [0, 0, 5, 0, 0],
+        [0, 0, 5, 0, 0],
+        [0, 0, 5, 0, 0],
+        [0, 0, 0, 0, 0]
+      ];
+      break;
+    case "S":
+      return [
+        [0, 6, 6],
+        [6, 6, 0],
+        [0, 0, 0],
+      ];
+      break;
+    case "Z":
+      return [
+        [7, 7, 0],
+        [0, 7, 7],
+        [0, 0, 0],
+      ];
+      break;
+    default:
+      break;
+  }  
 }
 
 
@@ -164,7 +175,7 @@ function drawPieza(pieza, posicion) {
       // La considional valida si el valor llega diferente a 0 dibujara el tetramino
       if (value !== 0) {
         PINCEL.fillStyle = COLORS[value]; // Color del tetramino
-        PINCEL.fillRect(x + posicion.x, y + posicion.y, .8, .8); // Pocicion del rectangulo que se dibujara dependiendo de las pocisones en x - y, y se pone el tamaño que tendra
+        PINCEL.fillRect(x + posicion.x + 0.1, y + posicion.y + 0.1, .8, .8); // Pocicion del rectangulo que se dibujara dependiendo de las pocisones en x - y, y se pone el tamaño que tendra
       }
     })
   });
@@ -216,6 +227,7 @@ function gridDelete() {
 
 // La funcion update nos ira actualizando el tiempo que le llegue como parametro - el tiempo anterior, se redibujara el canvas cada vez que se llame esta funcion
 function update(time = 0) {
+  if(pause) return; // Si se cumple que pausa sea verdadero no ejetucara el resto de la función 
   const DELTA_TIME = (time - lastTime);
   lastTime = time;
   dropCounter += DELTA_TIME; // Se le asigna al contador el tiempo que resulte cada vez que se resta el tiempo actual con el anterior en cada llamada de la animacion sobre la funcion
@@ -349,6 +361,17 @@ function welcome() {
     imageHeight: 200,
     imageAlt: 'Custom image',
   })
+/* La función permitira pausar el juego y la musica a traves del condicional que se envia como parametro y el evento onclick del boton pausa*/
+function fPause(pauser) {
+  pause = pauser;
+  if (pause) {
+    document.getElementById("background_tetris").style.display = "block";
+    document.getElementById("sound").pause();
+  }else{
+    document.getElementById("background_tetris").style.display = "none";
+    document.getElementById("sound").play();
+    update();
+  }
 }
 
 // La funcion updateScore tiene como funcionalidad el actualizar el puntaje, el nivel y las lineas que se eliminen, se le asigna al html el valor que este actualmente por medio del DOM para visualizarlo siempre en el navegador
@@ -362,14 +385,19 @@ function updateScore() {
 // El evento nos ayudara a captar el sonido de las teclas especificas a la hora de mover el tetramino
 document.addEventListener('keydown', (event) => {
   // Condicion anidada si escucha las techas ⬇️➡️⬅️ o las teclas s-w-a-d
-  if (event.key === 'ArrowDown' || event.key === 's') {
-    dropDown(); // Se llama la funcion para que la pieza caiga en el eje y
-  } else if (event.key === 'ArrowLeft' || event.key === 'a') {
-    dropMove(-1); // Se llama la funcion para que la pieza se mueve hacia la izquierda en el eje x
-  } else if (event.key === 'ArrowRight' || event.key === 'd') {
-    dropMove(1); /// Se llama la funcion para que la pieza se mueve hacia la derecha en el eje x
-  } else if (event.key === 'ArrowUp' || event.key === 'w') {
-    piezaRotate(); // Se llama la funcion para que la pieza rote 90 grados
+  switch (event.key) {
+    case "ArrowDown" || "s":
+      dropDown(); // La pieza cae en el eje y      
+      break;
+    case "ArrowLeft" || "a":
+      dropMove(-1); // La pieza se mueve hacia la izquierda en el eje x    
+      break;
+    case "ArrowRight" || "d":
+      dropMove(1); // La pieza se mueve hacia la derecha en el eje y    
+      break;
+    case "ArrowUp" || "w":
+      piezaRotate();// La pieza rota     
+      break;    
   }
 })
 

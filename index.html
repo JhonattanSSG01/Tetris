@@ -175,6 +175,25 @@
         height: 500px;
       }
     }
+
+    div.background_tetris{
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1;
+      display: none;
+    }
+
+    div.UI-Pause{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 200px;
+      margin-top: -100px;
+      margin-left: -150px;
+    }
   </style>
 </head>
 
@@ -231,6 +250,27 @@
     </section>
   </div>
 
+  <audio id="sound" src="audio/soundtrack.mp3" autoplay loop></audio>
+  <div id="background_tetris" class="background_tetris">
+    <div class="UI-Pause">
+      <button onclick="fPause(false)" class="btn">Reiniciar</button>
+    </div>
+  </div>
+  <section>
+    <div id="score"></div>
+    <div id="line"></div>
+    <div id="level"></div>
+    <div class="btn_group">
+      <button onclick="fPause(true)" class="btn">Pausa</button>
+    </div>
+    <div>
+      <button id="button">
+        flecha
+      </button>
+    </div>
+  </section>
+  <canvas id="next" width="170" height="220"></canvas>
+  <canvas id="grid" width="450" height="900"></canvas> <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
   <!-- 
     Vectores
     Matriz bidemensionales 
