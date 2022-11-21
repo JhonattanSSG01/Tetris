@@ -10,7 +10,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-   *{
+    * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -48,7 +48,7 @@
       align-items: center;
     }
 
-    .title{
+    .title {
       margin: 3rem 0;
     }
 
@@ -63,7 +63,7 @@
       text-transform: uppercase;
       animation: wavly 1s infinite;
       animation-delay: calc(.1s * var(--i));
-      
+
       /*animation: typing 2s steps(22), blink .5s step-end infinite alternate;
       overflow: hidden;
       white-space: nowrap;
@@ -71,14 +71,18 @@
     }
 
     @keyframes wavly {
-      0%,40%,100%{
+
+      0%,
+      40%,
+      100% {
         transform: translateY(0);
       }
 
-      20%{
+      20% {
         transform: translateY(20px);
       }
     }
+
     /*
     @keyframes typing {
       from {
@@ -99,13 +103,13 @@
       font-size: 6rem;
     }
 
-   span:nth-of-type(3) {
+    span:nth-of-type(3) {
       color: #c52690;
       text-shadow: 8px 5px 25px rgb(161, 9, 149);
       font-size: 5rem;
     }
 
-    .panel > div {
+    .panel>div {
       display: flex;
       justify-content: space-between;
       padding: 1.5rem 1rem;
@@ -117,8 +121,8 @@
       background: linear-gradient(45deg, rgb(9, 100, 104), transparent);
     }
 
-    .panel > div:first-of-type{
-       box-shadow: 10px 8px 35px rgb(178, 182, 183);
+    .panel>div:first-of-type {
+      box-shadow: 10px 8px 35px rgb(178, 182, 183);
       background: linear-gradient(45deg, rgb(168, 12, 165), transparent);
     }
 
@@ -145,6 +149,11 @@
       align-items: center;
     }
 
+    .button>.d-none {
+      border: none;
+      display: none;
+    }
+
     button {
       width: 5rem;
       height: 4rem;
@@ -152,9 +161,9 @@
       border-radius: 3rem;
       background-color: rgba(255, 255, 255, .6);
       cursor: pointer;
-      border: none;
-      display: none;
     }
+
+
 
     .h2 {
       background-color: rgba(15, 15, 15, .8);
@@ -165,18 +174,7 @@
       text-transform: uppercase;
     }
 
-    @media only screen and (max-width: 600px) {
-      button {
-        display: block;
-      }
-
-      #grid {
-        width: 250px;
-        height: 500px;
-      }
-    }
-
-    div.background_tetris{
+    div.background_tetris {
       position: absolute;
       width: 100%;
       height: 100vh;
@@ -185,7 +183,7 @@
       display: none;
     }
 
-    div.UI-Pause{
+    div.UI-Pause {
       position: fixed;
       top: 50%;
       left: 50%;
@@ -194,18 +192,29 @@
       margin-top: -100px;
       margin-left: -150px;
     }
+
+    @media only screen and (max-width: 600px) {
+      .button button {
+        display: block;
+      }
+
+      #grid {
+        width: 250px;
+        height: 500px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
     <audio id="sound" src="audio/soundtrack.mp3" autoplay loop></audio>
-    
-    <section id="background_tetris" class="background_tetris">
+
+    <div id="background_tetris" class="background_tetris">
       <div class="UI-Pause">
         <button onclick="fPause(false)" class="btn">Reiniciar</button>
       </div>
-    </section>
+    </div>
     <section class="text">
       <!-- <h1>te<span>t</span>ris</h1> -->
       <div class="title">
@@ -216,42 +225,42 @@
         <span style="--i:5">i</span>
         <span style="--i:6">s</span>
       </div>
+      <div class="btn_group">
+        <button onclick="fPause(true)" class="btn">Pausa</button>
+      </div>
       <div class="panel">
         <div id="record"></div>
         <div id="score"></div>
         <div id="line"></div>
         <div id="level"></div>
       </div>
-      <div class="btn_group">
-        <button onclick="fPause(true)" class="btn">Pausa</button>
-      </div>
     </section>
-  
+
     <section class="next">
       <canvas id="next" width="170" height="220"></canvas>
       <h2 class="h2">next</h2>
     </section>
-  
+
     <section>
       <canvas id="grid" width="450" height="900"></canvas>
       <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
       <section class="button">
-        <div>
+        <div class="d-none">
           <button id="buttonRotar">
             <img src="./assets/rotate.svg" alt="Icono de rotar">
           </button>
         </div>
-        <div>
+        <div class="d-none">
           <button id="buttonDerecha">
             <img src="./assets/right.svg" alt="Icono de flecha derecha">
           </button>
         </div>
-        <div>
+        <div class="d-none">
           <button id="buttonIzquierda">
             <img src="./assets/left.svg" alt="Icono de flecha izquierda">
           </button>
         </div>
-        <div>
+        <div class="d-none">
           <button id="buttonAbajo">
             <img src="./assets/down.svg" alt="Icono de flecha abajo">
           </button>
