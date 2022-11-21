@@ -361,6 +361,7 @@ function welcome() {
     imageHeight: 200,
     imageAlt: 'Custom image',
   })
+}
 /* La función permitira pausar el juego y la musica a traves del condicional que se envia como parametro y el evento onclick del boton pausa*/
 function fPause(pauser) {
   pause = pauser;
@@ -403,16 +404,15 @@ document.addEventListener('keydown', (event) => {
 
 BTN_R.addEventListener('click', () => {
   piezaRotate(); // La pieza rota 90 grados
-})
+});
 BTN_D.addEventListener('click', () => {
   dropMove(1); // La pieza se mueve hacia la derecha en el eje x
-})
+});
 BTN_I.addEventListener('click', () => {
   dropMove(-1); // La pieza se mueve hacia la derecha en el eje x
-})
+});
 BTN_A.addEventListener('click', () => {
   dropDown(); // La pieza cae en el eje y
-})
+});
 
 reset();// Se llama la funcion para que siempre reinice y salga la primera ficha
-welcome()

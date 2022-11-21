@@ -199,6 +199,13 @@
 
 <body>
   <div class="container">
+    <audio id="sound" src="audio/soundtrack.mp3" autoplay loop></audio>
+    
+    <section id="background_tetris" class="background_tetris">
+      <div class="UI-Pause">
+        <button onclick="fPause(false)" class="btn">Reiniciar</button>
+      </div>
+    </section>
     <section class="text">
       <!-- <h1>te<span>t</span>ris</h1> -->
       <div class="title">
@@ -215,6 +222,9 @@
         <div id="line"></div>
         <div id="level"></div>
       </div>
+      <div class="btn_group">
+        <button onclick="fPause(true)" class="btn">Pausa</button>
+      </div>
     </section>
   
     <section class="next">
@@ -223,7 +233,7 @@
     </section>
   
     <section>
-      <canvas id="grid" width="440" height="900"></canvas>
+      <canvas id="grid" width="450" height="900"></canvas>
       <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
       <section class="button">
         <div>
@@ -249,28 +259,6 @@
       </section>
     </section>
   </div>
-
-  <audio id="sound" src="audio/soundtrack.mp3" autoplay loop></audio>
-  <div id="background_tetris" class="background_tetris">
-    <div class="UI-Pause">
-      <button onclick="fPause(false)" class="btn">Reiniciar</button>
-    </div>
-  </div>
-  <section>
-    <div id="score"></div>
-    <div id="line"></div>
-    <div id="level"></div>
-    <div class="btn_group">
-      <button onclick="fPause(true)" class="btn">Pausa</button>
-    </div>
-    <div>
-      <button id="button">
-        flecha
-      </button>
-    </div>
-  </section>
-  <canvas id="next" width="170" height="220"></canvas>
-  <canvas id="grid" width="450" height="900"></canvas> <!-- Se crea el campo canvas donde se visualizara el desarrollo -->
   <!-- 
     Vectores
     Matriz bidemensionales 
