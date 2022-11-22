@@ -354,8 +354,8 @@ div.UI-Pause {
 
 @media only screen and (max-width: 420px) {
   #grid {
-    width: 180px;
-    height: 360px;
+    width: 200px;
+    height: 380px;
   }
 
   #next {
