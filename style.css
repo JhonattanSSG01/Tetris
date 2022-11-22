@@ -16,6 +16,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  overflow-y: hidden;
 }
 .game {
   align-self: center;
@@ -354,7 +355,7 @@ div.UI-Pause {
 
 @media only screen and (max-width: 420px) {
   #grid {
-    height: 450px;
+    height: 430px;
   }
 
   #next {
