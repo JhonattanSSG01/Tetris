@@ -367,7 +367,7 @@ function welcome() {
   })
 }
 
-/* The function will allow to pause the game and the music through the conditional that is sent as parameter and the onclick event of the pause button*//
+/* The function will allow to pause the game and the music through the conditional that is sent as parameter and the onclick event of the pause button */
 function fPause(pauser) {
   pause = pauser;
   if (pause) {
