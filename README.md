@@ -15,3 +15,10 @@ Por el lado de los eventos, adquirí el aprendizaje sobre el evento del teclado,
 Además, comprendí mucho mejor el emplear for anidados para recorrer matrices o arrays bidimensionales, y asi,  obtener un valor para validar ciertas situaciones en el código. 
 Por último, se investigó varios métodos que no conocía anteriormente para dar animación a un objeto en fotogramas, como lo es RequestAnimationFrame(), el uso del SetTimeOut()
 para dar un periodo de tiempo a una ejecución en específica.
+
+## Jonathan 👦
+
+A través de este proyecto pude aprender como el adecuado manejo del elemento Canvas puede ayudar al desarrollador a crear animaciones e interactuar con ellas por medio de javascript. Además, por medio del proyecto pude entender mejor el manejo de los arreglos bidimensionales y como recorerlos por medio de los ciclos For y ForEach.
+
+Adicionalmente entendí de mejor manera los eventos de teclado y esto a su vez me permitió conocer por medio de la investigación diferentes tipos de eventos y sus características.
+
